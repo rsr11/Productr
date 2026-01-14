@@ -1,7 +1,7 @@
-### Productr
+# Productr
 
-# It is a Assignment given by Orufy Technology.
- # I have created two folders:
+### It is a Assignment given by Orufy Technology.
+### I have created two folders:
   - server (Backend logic)
   - client (Frontend logic)
   
