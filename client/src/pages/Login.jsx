@@ -1,7 +1,8 @@
 import React from 'react'
 import RunnerImg from "../assets/boy_run.jpg";
 import Bg from "../assets/bg.png";
-import logo from "../assets/logo_symbol.png";
+// import logo from "../assets/logo_symbol.png";
+import Logo from '../components/Logo';
 
 const Login = () => {
   return (
@@ -9,7 +10,8 @@ const Login = () => {
         <section className='w-1/2 flex' >
           <section className='bgCover relative flex flex-col w-full m-10 rounded-4xl' >
              <img src={Bg} style={{mixBlendMode:"screen"}} className='border-[#D4D4D4] absolute mix-blend-scree opacity-95 h-full w-full rounded-3xl' alt="" />
-              <h1 className='logo px-5 absolute py-4 text-[#071074] font-normal text-2xl flex items-center gap-2'>Productr <img src={logo} alt="" /> </h1>
+              {/* <h1 className=' flex items-center gap-2'>Productr <img src={logo} alt="" /> </h1> */}
+              <Logo styling={"logo px-5 absolute py-4 text-[#071074] font-normal text-2xl"} />
               <section className='flex-1 flex justify-center items-center'>
 
                 <section className='bgRunner absolute flex justify-center items-end text-white w-72 h-100 rounded-[48px]' >

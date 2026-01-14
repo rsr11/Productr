@@ -49,3 +49,19 @@
 .blurry{
   filter: blur( );
 }
+
+.GradientBtn{
+  background: linear-gradient(180deg, #000FB4 13.75%, #4050FF 135%);
+};
+
+.bgShadow{
+  box-shadow: 0px 4px 4px 0px #00000040;
+  background: #293B6080 ;
+  /* background: hsla(222, 34%, 15%, 0.5); */
+  
+}
+
+label{
+  color: #344054;
+}
+
