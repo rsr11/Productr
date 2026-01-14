@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 
 const User = new mongoose.Schema({
@@ -7,11 +7,16 @@ const User = new mongoose.Schema({
         required: true
     },
     email:{
-        type : String,
+        type : String,           
         required : true,
         unique:true
     },
-    mobileNumber:{
-        type:
+    mobile:{
+        type: String,
+        required:true,
     }
-})
+},{timestamps:true});
+
+
+
+export default mongoose.model('user',User);
