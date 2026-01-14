@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+
+
+/* @import url(https://db.onlinewebfonts.com/c/35e06493aed2f14d19a0b8d735c06b62?family=AvertaStd-Black); */
+
+
+:root {
+  font-family: "Inter" ;
+  /* line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #100202de;
+  background-color: white ; */
+  /* #242424; */
+
+  /* font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+}  
+
+
+.logo{
+  font-family: "AvertaStd-Black";
+}
+
+.bgCover{
+  /* background-image: url(./assets/bg.png); */
+  /* background-position:center; */
+  /* background-size: cover; */
+  background: linear-gradient(180deg, #010860 0%, #002283 19.23%, #734AA3 38.46%, #E7959C 57.21%, #E4A182 76.92%, #BF3613 100%);
+  /* ,url(./assets/bg.png); */
+}
+
+.bgRunner{
+  background-image: url(./assets/boy_run.jpg);
+  background-size: cover;
+  background-position: center;
+ 
+}
+
+/* .transformm{
+  transform: translateX();
+} */
+
+
+.blurry{
+  filter: blur( );
+}

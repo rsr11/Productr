@@ -8,7 +8,7 @@ import { sendSmsViaOtp } from "../utils/otp.utils.js";
 export const registerUser = async (req,res)=>{
     try {
         
-        const {email,mobile} = req.body;
+        const {name,email,mobile} = req.body;
 
         const userExist = await userModel.findOne({$or : [{email,mobile}]});
 
@@ -63,3 +63,11 @@ export const verifyOtp = async (req,res)=>{
         
      }
 };
+
+
+
+export const sendOtp = async (req,res)=>{
+ 
+    {}
+
+}
