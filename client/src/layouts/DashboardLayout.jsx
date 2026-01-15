@@ -9,7 +9,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 const DashboardLayout = () => {
   return (
     <section className='flex' >
-      <aside className=' bg-[#1D222B] w-1/6 h-screen' >
+      <aside className=' bg-[#1D222B] w-1/6 min-h-screen' >
         <Logo styling={"text-white text-[24px] p-5 font-bold"} />
         <input type="search" className='p-2 w-[90%] text-[#98A2B3] bg-[#2F343D] rounded-sm ml-3' name="search" id="search" placeholder={` Search`}  />
          
