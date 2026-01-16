@@ -1,11 +1,5 @@
 import { body } from "express-validator";
-
-
-export const registrationValidation = [
-   body('name').notEmpty().withMessage("Name is required!"),
-   body('email').isEmail().withMessage("Invalid email format"),
-   body('mobile').notEmpty().withMessage("Mobile number is required").matches(/^\+91[6-9]\d{9}$/).withMessage("Mobile number must be in format +91XXXXXXXXXX")
-];
+import validator from "validator";
 
 
 
@@ -24,3 +18,22 @@ export const loginValidation = [
       return true;
     })
 ];
+
+
+export const validateLoginInput = (value) => {
+  if (!value) {
+    console.log("Email or mobile number is required");
+    return false;
+  };
+
+  if (validator.isMobilePhone(value, "en-IN")) {
+    return { type: "mobile", value };
+  };
+
+  if (validator.isEmail(value)) {
+    return { type: "email", value };
+  };
+
+  console.log("Invalid email or mobile number");
+  return false;
+};

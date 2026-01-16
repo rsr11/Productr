@@ -16,6 +16,9 @@ const Otp = new mongoose.Schema({
     enum: ["login", "register"],
     required: true
   },
+  UserName:{
+    type:String
+  },
   expiresAt: {
     type: Date,
     required: true,

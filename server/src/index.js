@@ -2,6 +2,7 @@ import express from 'express';
 import cors from "cors";
 import { connectDB } from './db/index.js';
 import Dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 
 import UserRoute from "./routes/user.route.js";
 import ProductRoute from "./routes/product.route.js";
@@ -15,6 +16,7 @@ const app = express();
 app.use(express.urlencoded({extended:true,limit:'16kb'}));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cookieParser());
 app.use(cors());
 
 

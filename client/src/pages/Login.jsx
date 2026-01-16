@@ -1,10 +1,50 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import RunnerImg from "../assets/boy_run.jpg";
 import Bg from "../assets/bg.png";
 // import logo from "../assets/logo_symbol.png";
+import validator from "validator";
 import Logo from '../components/Logo';
+import OtpForm from '../components/OtpForm';
 
 const Login = () => {
+
+const [isOtpSended, setIsOtpSended] = useState(false);
+const contactRef = useRef();
+
+
+
+
+const validateLoginInput = (value) => {
+  if (!value ) {
+    return "Email or mobile number is required";
+  }
+
+   if (validator.isMobilePhone(value, "en-IN")) return null;
+
+  if (validator.isEmail(value)) return null;
+
+  alert("Enter a valid email or Indian mobile number");
+  return "Enter a valid email or Indian mobile number";
+  
+};
+
+
+  
+const LoginSubmit = (e)=>{
+     e.preventDefault();
+     alert(contactRef.current.value);
+
+  const err = validateLoginInput(contactRef.current.value);
+  if (err) {
+    // setError(err);
+    alert(err);
+    return;
+  }
+
+ 
+};
+
+
   return (
     <section className='flex gap-10 bg-[#F7F8FA] h-screen'>
         <section className='w-1/2 flex' >
@@ -29,13 +69,16 @@ const Login = () => {
           
           <section>
             <h1 className='text-[#111652] text-[24px] font-semibold ml-2 mt-20' >Login to your Product Account</h1>
-            <form action="" className='mt-10' >
+
+            { isOtpSended ? <OtpForm/> : 
+            <form action="" onSubmit={(e)=>{LoginSubmit(e)}} className='mt-10' >
                 <section className='flex flex-col' >
-                <label htmlFor="userId">Email or Phone number</label>
-                <input type="text" className='border bg-white mt-2 p-2 rounded-lg border-[#D4D4D4]' name="userId" placeholder='Enter email or phone number' id="userId" />
-                <button className='bg-[#071074] text-white py-2 rounded-lg mt-5' >Login</button>
+                <label htmlFor="contact">Email or Phone number</label>
+                <input type="text" className='border bg-white mt-2 p-2 rounded-lg border-[#D4D4D4]' ref={contactRef} name="contact" placeholder='Enter email or phone number' id="contact" />
+                <button type='submit' className='bg-[#071074] cursor-pointer text-white py-2 rounded-lg mt-5' >Login</button>
                 </section>
             </form>
+            }
           </section>
 
           <section className='bg-white border border-[#D4D4D4] mb-20 py-5 px-14 rounded-lg' >

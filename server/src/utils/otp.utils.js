@@ -1,4 +1,5 @@
 import axios from "axios"
+import nodemailer from "nodemailer";
 
 
 
@@ -21,4 +22,46 @@ export const sendSmsViaOtp = async (mobile,otp)=>{
         console.log("Error in sendSmsViaOtp : "+error);
         return;
     }
+};
+
+
+export const sendOtpViaEmail = async (toEmail, otp) => {
+
+    // console.log(process.env.EMAIL_ID + "  " + process.env.EMAIL_PASSKEY);
+    
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_ID,
+        pass: process.env.EMAIL_PASSKEY 
+      }
+    });
+
+
+    try {
+
+        const info = await transporter.sendMail({
+    from: '"Productr" <rsr45411@gmail.com>',
+    to: toEmail,
+    subject: 'Your OTP Code',
+    html: `
+    <div>
+    <h1>The Otp is valid for 5 min ! </h1>
+    <p>Your OTP is : <strong>${otp}</strong></p>
+    <div>
+    `
+  });
+
+  // console.log(info);
+  
+  console.log('Message sent:', info.messageId);
+  return true;
+      
+    } catch (error) {
+        console.log("error in otp sending "+error);
+        return false;
+     
+    }
+  
 };
