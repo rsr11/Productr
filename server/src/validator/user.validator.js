@@ -23,17 +23,17 @@ export const loginValidation = [
 export const validateLoginInput = (value) => {
   if (!value) {
     console.log("Email or mobile number is required");
-    return false;
+    return {ok:false,msg:"Email or mobile number is required"};
   };
 
   if (validator.isMobilePhone(value, "en-IN")) {
-    return { type: "mobile", value };
+    return {ok:true, type: "mobile", value };
   };
 
   if (validator.isEmail(value)) {
-    return { type: "email", value };
+    return {ok:true, type: "email", value };
   };
 
   console.log("Invalid email or mobile number");
-  return false;
+  return {ok:false,msg:"Invalid email or mobile number"};
 };

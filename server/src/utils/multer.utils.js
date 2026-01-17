@@ -5,10 +5,12 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
-    limits:{fileSize:2*1024*1024},
-    fileFilter:(req,res,cb)=>{
-        if(!file.mimetype.startsWith("images/")){
-            return cb(new Error("Only images file allowed"),false);
+    limits:{fileSize:2*1024*1024}, 
+    fileFilter:(req,file,cb)=>{
+        if(!file.mimetype.startsWith("image/")){
+             console.log("MIME TYPE:", file.mimetype);
+            console.log("ORIGINAL NAME:", file.originalname);
+            return cb(null,false);
         }
         cb(null,true);
     },

@@ -6,23 +6,20 @@ import { sendOtpViaEmail, sendSmsViaOtp } from "../utils/otp.utils.js";
 import validator from "validator";
 import { validateLoginInput } from "../validator/user.validator.js";
 import jwt from "jsonwebtoken";
-import { log } from "console";
+
+
 
 
 export const registerUser = async (req,res)=>{
-     
-    
+      
     try {       
         const {name,contact} = req.body;
         console.log(name+" "+" "+contact);
-        
         const isContactValid = validateLoginInput(contact);
-
         console.log("validated!");
         
 
         if(!isContactValid) return res.status(404).json({msg:"invalid data!"});
-
         const userExist = await userModel.findOne({contact:contact});
 
         console.log(userExist);
@@ -31,14 +28,9 @@ export const registerUser = async (req,res)=>{
         if(userExist) return res.status(400).json({ message: "User already exists" });
 
         const otp = generateOTP();
-
-        console.log(otp);
-        
-
         const hashedOtp = crypto.createHash("sha256").update(otp.toString()).digest("hex");
+        console.log(otp);
          
-
-
        const theOtpDoc =  await otpModel.create({
             contact:contact,
             otp:hashedOtp,
@@ -76,8 +68,14 @@ export const registerUser = async (req,res)=>{
 export const verifyOtp = async (req,res)=>{
      const {contact, purpose,otp} = req.body;
 
+     console.log(contact+" "+purpose+" "+otp);
+     
+
     try {
-    const record = await otpModel.findOne({ contact});
+    const record = await otpModel.findOne({contact});
+
+    console.log("finding record");
+    
     // const theUser = await userModel.findOne({contact}); 
 
     if (!record) return res.status(404).json({msg:"otp is expired!"});
@@ -136,19 +134,36 @@ export const loginUser = async (req,res)=>{
      try {
 
         const isValid = validateLoginInput(contact);
-        const isUserExist = userModel.findOne({contact:contact});
+
+        console.log(isValid.ok);
+        
+
+        if(!isValid.ok) return res.status(404).json({msg:isValid.msg});
+
+        const isUserExist = await userModel.findOne({contact:contact});
+
+        console.log(isUserExist);
+        
 
         if(!isUserExist) return res.status(404).json({msg:"User not exist!"});
 
         const otp = generateOTP();
         const hashedOtp = crypto.createHash("sha256").update(otp.toString()).digest("hex");
 
-        await otpModel.create({
-            contact:contact,
-            otp:hashedOtp,
-            purpose:"login",
-            expiresAt: Date.now() + 5*60*1000
-        });
+        // await otpModel.create({
+        //     contact:contact,
+        //     otp:hashedOtp,
+        //     purpose:"login",
+        //     expiresAt: Date.now() + 5*60*1000
+        // });
+
+        await otpModel.findOneAndUpdate(
+            { contact }, 
+            { otp:hashedOtp,
+             expiresAt: Date.now() + 5 * 60 * 1000 
+            },
+           { upsert: true, 
+             new: true });
         
         if(isValid?.type === "mobile"){     
        const isSmsSended =  await sendSmsViaOtp(contact,otp);
@@ -156,17 +171,15 @@ export const loginUser = async (req,res)=>{
         }else{
             const funcRes = await sendOtpViaEmail(contact,otp);
             if(funcRes){
-                res.status(201).json({msg:"otp is sended to your email!"});
+                res.status(200).json({msg:"otp is sended to your email!"});
             }else{
                 res.status(404).json({msg:"server error ! retry!"});
             }
-        }
-
-        
+        }      
      } catch (error) {
         console.log(error);
         res.status(404).json({msg:"somthing went wrong!", error});
         
      }
 
-}
+};

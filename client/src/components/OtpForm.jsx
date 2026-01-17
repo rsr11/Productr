@@ -1,8 +1,32 @@
-import React, { useRef, useState } from 'react'
-const OtpForm = () => {
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+
+const OtpForm = ({purpose,name,contact}) => {
 
     const [theOtp, setTheOtp] = useState(new Array(6).fill(""));
+    // const [otpTry, setOtpTry] = useState(2);
+    const [ResendSec, setResendSec] = useState(20);
     const otpRef = useRef([]);
+    const naviagte = useNavigate();
+
+
+
+    useEffect(()=>{
+       if (ResendSec === 0) return;
+        const timer = setInterval(() => {
+    setResendSec(prev => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+      return () => clearInterval(timer);
+
+    },[ResendSec])
 
     
 
@@ -31,13 +55,73 @@ const OtpForm = () => {
 
 
 
+    // empty all the field of otp grid
+    function AllEmpty(){
+      console.log("all empty");  
+      setTheOtp(new Array(6).fill(""));
+    };
+
+   console.log(ResendSec);
+   
+
+    // alert(contact);
+
+    const onOtpSubmit = async(e)=>{
+      
+      e.preventDefault();
+
+      const theval = theOtp.join("");
+
+      if(theval.length <6){
+        alert("complete the otp field!");
+        return;
+      };
+         
+      
+        try {
+          const res = await axios.post("http://localhost:4020/productr/api/auth/checkOtp",{contact,purpose, otp:theval},{headers:{"Content-Type":"application/json"},withCredentials:true});
+
+          if(res.status === 200){
+            alert(res?.data?.msg);
+            naviagte("/");
+
+          };
+
+
+        } catch (error) {
+           alert(error?.response?.data?.msg);
+           AllEmpty();
+        }
+    }
+
+
+    const reSendotp = async(purpose,name,contact)=>{
+          
+       try {
+
+        const res = await axios.post(`http://localhost:4020/productr/api/auth/${purpose}`,
+           purpose === 'login' ? {contact} : {name,contact},
+          {headers:{"Content-Type":"application/json"}} );
+
+          if(res.status===200){
+            alert("Otp is Resended successfully");
+            setResendSec(20);
+          }
+        
+       } catch (error) {
+         console.log(error);        
+       }
+    }
+
+
+
   return (
     <section className='mt-10' > 
          
          <h1 className='text-[#344054]  text-lg' >Enter OTP</h1>
 
          
-         <form className='flex  flex-col w-fit' >
+         <form onSubmit={(e)=>onOtpSubmit(e)}  className='flex  flex-col w-fit' >
 
             <section className='flex mt-2 w-fit gap-2' >
             {theOtp?.map((value,index)=>{
@@ -55,9 +139,9 @@ const OtpForm = () => {
             })}
             </section>
              
-             <button className='cursor-pointer text-white py-2 rounded-lg mt-5 bg-[#071074]' >Enter your OTP</button>
+             <button type='submit' className='cursor-pointer text-white py-2 rounded-lg mt-5 bg-[#071074]' >Enter your OTP</button>
                </form>
-             <p className='text-[#98A2B3] mt-3 ml-5 text-sm' > Didnt recive OTP ? <a className='text-[#071074]' > Resend in 20s </a> </p>  
+             <p className='text-[#98A2B3] mt-3 ml-5 text-sm' > Didnt recive OTP ? <button onClick={()=>reSendotp(purpose,name,contact)} disabled={ResendSec > 0 ? true : false} className={`${ResendSec > 0 ? "cursor-not-allowed" : "cursor-pointer"} text-[#071074]`} > {ResendSec > 0 ? `Resend in ${ResendSec}s` : "Resend OTP" }  </button> </p>  
 
     </section>
   )

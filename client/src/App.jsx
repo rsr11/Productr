@@ -10,16 +10,29 @@ import Published from './pages/Home/Published.jsx'
 import UnPublished from './pages/Home/UnPublished.jsx'
 import Products from './pages/Products.jsx'
 import HomeLayout from './layouts/HomeLayout.jsx'
+import LoginRes from './pages/LoginRes.jsx'
+import UserState from './context/UserContext/UserState.jsx'
+import { useContext } from 'react'
+import UserDetail from './context/UserContext/user.js'
 
-function App() {
+function App() { 
+
+  const context = useContext(UserDetail);
+  const {user} = context;
+
+  console.log(`the user is ${user}`);
+  
+
+  // console.log(`the user is ${user}`);
+  
 
   return (
     <>
     <BrowserRouter>
     <Routes>
-       <Route path='/' element={<DashboardLayout/>}>
+       <Route path='/' element={ !user ? <Navigate to={`/login`} /> : <DashboardLayout/>}>
        
-       <Route index element={<Navigate to={"published"} replace />} />
+       <Route index element={ <Navigate to={"published"} replace />} />
 
        <Route  element={<HomeLayout/>} >
        {/* <Route index element={<Home/>} /> */}
