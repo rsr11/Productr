@@ -12,7 +12,7 @@ const route = express.Router();
 
 route.post(`/add-product`,authMiddleware,upload.array("productImgs", 5) ,productValidator, dataValidator,AddProduct);
 route.delete(`/delete-product/:productId`,authMiddleware,deleteProduct);
-route.put(`/edit-product/:productId`,authMiddleware,editProduct);
+route.put(`/edit-product/:productId`,authMiddleware,upload.array("productImgs", 5),editProduct);
 route.get(`/get-product/:productId`,authMiddleware,SendProduct);
 
 
