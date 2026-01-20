@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import UserDetail from '../context/UserContext/user';
 
 const OtpForm = ({purpose,name,contact}) => {
 
@@ -9,6 +10,9 @@ const OtpForm = ({purpose,name,contact}) => {
     const [ResendSec, setResendSec] = useState(20);
     const otpRef = useRef([]);
     const naviagte = useNavigate();
+    const context = useContext(UserDetail);
+
+    const {setUser} = context;
 
 
 
@@ -66,8 +70,10 @@ const OtpForm = ({purpose,name,contact}) => {
 
     // alert(contact);
 
-    const onOtpSubmit = async(e)=>{
-      
+
+
+
+    const onOtpSubmit = async(e)=>{  
       e.preventDefault();
 
       const theval = theOtp.join("");
@@ -83,6 +89,7 @@ const OtpForm = ({purpose,name,contact}) => {
 
           if(res.status === 200){
             alert(res?.data?.msg);
+            setUser(res?.data?.msg);
             naviagte("/");
 
           };

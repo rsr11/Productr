@@ -5,7 +5,8 @@ import axios from "axios";
 
 const UserState = (props)=>{
 
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     
     useEffect(()=>{
           const fetchUser = async () => {
@@ -13,11 +14,13 @@ const UserState = (props)=>{
         const res = await axios.get("http://localhost:4020/productr/api/auth/activeUser", {
           withCredentials: true
         });
-        setUser(res?.data);
+        setUser(res?.data?.data || null);
       } catch (err) {
         console.log(err);
         
-        setUser(false);
+        setUser(null);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -26,7 +29,7 @@ const UserState = (props)=>{
 
 
     return (
-        <UserDetail.Provider value={{user,setUser}}>
+        <UserDetail.Provider value={{user,setUser,loading}}>
             {props.children}
         </UserDetail.Provider>
     )

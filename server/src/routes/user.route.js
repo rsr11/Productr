@@ -19,4 +19,6 @@ route.get(`/activeUser`,authMiddleware,(req,res)=>{
 });
 
 
+
+
 export default route;

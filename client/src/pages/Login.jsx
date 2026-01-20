@@ -40,14 +40,14 @@ const LoginSubmit = async (e)=>{
   e.preventDefault();
   
   try {
-    alert(contactRef.current.value);
+    // alert(contactRef.current.value);
     const err = validateLoginInput(contactRef.current.value);
     setContact(contactRef.current.value);
     // alert(err);
     if(err){
       console.log(contactRef.current.value);
       
-      alert(err +" te");
+      // alert(err +" te");
       return;
     }
     
@@ -61,7 +61,7 @@ const LoginSubmit = async (e)=>{
     };
       
     } catch (error) {
-        alert("catchy"+error?.response?.data?.msg);
+        alert(error?.response?.data?.msg);
         console.log(error);
         setLoading(false);
         

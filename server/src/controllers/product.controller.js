@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import cloudinary from "../config/cloudnary.config.js";
 import productModel from "../models/product.model.js";
 import { uploadInCloudnary } from "../utils/cloudnary.utils.js";
-import moongoose from "moongoose";
+// import moongoose from "moongoose";
 
 
 
@@ -12,8 +12,8 @@ export const AddProduct = async(req,res)=>{
      const{name,type,quantityInStock,mrp,sellingPrice,brandName,isReturnEligible} = req.body;
      const userId = req.user._id; // Get from authenticated user, NOT from req.body
 
-     console.log("FILES:", req.files);
-     console.log("BODY:", req.body);
+    //  console.log("FILES:", req.files);
+    //  console.log("BODY:", req.body);
 
    if(!req.files || req.files.length === 0) {
       return res.status(400).json({ msg: "Product images required" });
@@ -43,29 +43,48 @@ export const AddProduct = async(req,res)=>{
 
 
 
+export const SendAllProduct = async(req,res)=>{
+       try {
+         const userId = req.user._id;
+
+         const {status} = req.query;
+
+         let theProduct;
+
+         if(status){
+           theProduct = await productModel.find({owner: new mongoose.Types.ObjectId(userId), status: status}); 
+         }else{
+           theProduct = await productModel.find({owner:new mongoose.Types.ObjectId(userId)});
+         }
+         res.status(200).json({data:theProduct});
+       } catch (error) {
+        res.status(400).json({msg:"server error"});
+       }
+}
+
+
+
+
 export const SendProduct =  async (req,res)=>{
       try {
         
         let {productId} = req.params;
         productId = productId?.trim();
 
+        const userId = req.user._id;
 
-        let {status} = req.query;
-
-        
-
+        // let {status} = req.query;
         
         if(!productId) return res.status(400).json({msg:"didn't get the product id"});
         if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
 
 
-        let theProduct = false;
-
-        if(status){
-          theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId), status: status});   
-        }else{
-          theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
-        }
+        // let theProduct = false;
+        // if(status){
+  
+        // }else{
+         const theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
+        // }
 
         if(!theProduct) return res.status(404).json({msg:"The Product is not available!"});
         res.status(200).json({msg:"Got the product", data: theProduct});
@@ -77,42 +96,92 @@ export const SendProduct =  async (req,res)=>{
 };
 
 
+export const updateProductStatus = async (req,res)=>{
+     try {
+       let {productId} = req.params;
+       productId = productId?.trim();
+
+       if(!productId) return res.status(400).json({msg:"didn't get the product id"});
+       if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
+
+       const theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
+        // }
+
+       if(!theProduct) return res.status(404).json({msg:"The Product is not available!"});
+      
+       
+
+       if(theProduct.status === "publish"){
+       const updatedProdut = await productModel.findByIdAndUpdate(new mongoose.Types.ObjectId(productId),{$set:{status:"unpublish"}},{new:true});
+       
+      return res.status(200).json({data:updatedProdut,msg:"Status is changed"});
+
+       }else{
+       const updatedProdut = await productModel.findByIdAndUpdate(new mongoose.Types.ObjectId(productId),{$set:{status:"publish"}},{new:true});   
+        return res.status(200).json({data:updatedProdut,msg:"Status is changed"});
+
+       }
+
+     } catch (error) {
+        console.log(error);
+        return res.status(400).json({error:error,msg:"server error!"})
+        
+     }
+}
+
+
 
 
 export const editProduct = async(req,res)=>{
    try {
     const ProductDetail = req.body;
+
+    const existingImg = JSON.parse(req.body.existingImg);
+    console.log(existingImg);
+    
     console.log(ProductDetail);
     console.log("FILES:", req.files);
 
     let { productId } = req.params;
     productId = productId?.trim();
 
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ msg: "Invalid product ID" });
-    }
+    // console.log(productId);
+    
+
+    // if (!mongoose.Types.ObjectId.isValid(productId)) {
+    //   return res.status(400).json({ msg: "Invalid product ID" });
+    // }
 
     const theProduct = await productModel.findById(new mongoose.Types.ObjectId(productId));
     if (!theProduct) {
       return res.status(404).json({ msg: "Product not found" });
     }
-    
-        if (req.files && req.files?.length > 0) {
-      // images changed
-      console.log(theProduct.productImgs);
-      
-       for (const img of theProduct.productImgs) {
-        const publicId = img.split('/').pop().split('.')[0];
-        console.log(publicId);
-        
-        await cloudinary.uploader.destroy(`products/${publicId}`);
 
-      }; 
+   const newImages = theProduct?.productImgs?.filter(item => !existingImg.includes(item));
+    console.log(`new images =  ${newImages}`);
+    
+    
+    // req.files && req.files?.length > 0 
+
+        if (newImages.length > 0 || req.files && req.files?.length > 0) {
+      // images changed
+      console.log(newImages);
       
-      const newProductImges = await uploadInCloudnary(req.files);
+      if(newImages.length>0){
+       for (const img of newImages) {
+        const publicId = img.split('/').pop().split('.')[0];
+        console.log(publicId);   
+        await cloudinary.uploader.destroy(`products/${publicId}`);
+      }; };
+
+      let newProductImges = [];
+
+      if (req.files && req.files?.length > 0){
+       newProductImges = await uploadInCloudnary(req.files); }
+
       let updated =  await productModel.findByIdAndUpdate(
         productId,
-        {$set: {...req.body, productImgs: newProductImges}},
+        {$set: {...req.body, productImgs:[...newProductImges,...existingImg] }},
         {new : true}
       );
      
@@ -143,8 +212,11 @@ export const deleteProduct = async(req, res)=>{
         let {productId} = req.params;
         productId = productId?.trim();
 
+        // console.log(req);
+        
+
         if(!productId) return res.status(400).json({msg:"select a product to delete it"});
-        if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
+        // if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
 
         const theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
 
