@@ -1,10 +1,13 @@
 import React from 'react'
 
-const Toaster = () => {
+
+
+
+const Toaster = ({msg}) => {
   return (
-    <div>
-      
-    </div>
+    <span className='text-white bg-green-500 px-4 py-2' >
+       {msg}
+    </span>
   )
 }
 

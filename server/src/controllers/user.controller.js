@@ -6,6 +6,7 @@ import { sendOtpViaEmail, sendSmsViaOtp } from "../utils/otp.utils.js";
 import validator from "validator";
 import { validateLoginInput } from "../validator/user.validator.js";
 import jwt from "jsonwebtoken";
+import { log } from "console";
 
 
 
@@ -183,3 +184,25 @@ export const loginUser = async (req,res)=>{
      }
 
 };
+
+
+
+export const UserLogOut = async (req,res)=>{
+
+    try {
+         res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,       
+    sameSite: "strict",  
+  });
+
+  return res.status(200).json({msg: "Logged out successfully",});
+        
+    } catch (error) {
+       console.log(error);
+       return res.status(500).json({msg:"server error"});
+        
+    }
+   
+
+}

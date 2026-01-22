@@ -43,22 +43,20 @@ export const CreateProduct = async(productData)=>{
 
 
 export const DeleteProduct = async(productId)=>{
-  try {
-    
+  try {  
     console.log(productId);
-    
-    
+      
     const res = await axios.delete(`http://localhost:4020/productr/api/products/delete-product/${productId}`,{
       withCredentials:true
     });
     
-    if(res.status === 200){
+    // if(res.status === 200){
       return {status:res.status,msg:res.data.msg};
-    }
+    // }
     
   } catch (error) {
-    console.error('Error creating product:', error);
-    return error?.response?.data || error;
+    console.error('Error delete product:', error);
+    return {status:400,msg:"can't able to delete it"};
   }
 }
 
@@ -95,7 +93,11 @@ export const UpdateProduct = async(productData,productId)=>{
       productData.images.forEach((img) => {
         // console.log(img);
         
-        console.log(img.file); 
+        console.log(img?.file); 
+
+        if(img?.file?.size >= 5*1024*1024){
+          return {status:400,msg:"img size should be less then 5mb"};
+        }
         
         
         // Only append if it's a new file (has .file property)

@@ -1,6 +1,6 @@
 
 import express from "express";
-import { loginUser, registerUser, verifyOtp } from "../controllers/user.controller.js";
+import { loginUser, registerUser, UserLogOut, verifyOtp } from "../controllers/user.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 
@@ -15,8 +15,11 @@ route.post(`/checkOtp`,verifyOtp);
 
 route.get(`/activeUser`,authMiddleware,(req,res)=>{
     const userId = req.user;
-    res.status(200).json({msg:"Valid User",data:userId.name});
+    res.status(200).json({msg:"Valid User",data:{status:200,username:userId.name}});
 });
+
+
+route.get(`/logout`,authMiddleware,UserLogOut);
 
 
 

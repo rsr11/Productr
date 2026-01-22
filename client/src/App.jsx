@@ -10,18 +10,12 @@ import UnPublished from './pages/Home/UnPublished.jsx'
 import Products from './pages/Products.jsx'
 import HomeLayout from './layouts/HomeLayout.jsx'
 import LoginRes from './pages/LoginRes.jsx'
+import Productaa from './pages/Productaa.jsx'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() { 
-
-
-
-  
-  
-
-  // console.log(`the user is ${user}`);
-  
-
   return (
     <>
     
@@ -32,16 +26,24 @@ function App() {
        <Route index element={ <Navigate to={"published"} replace />} />
 
        <Route  element={<HomeLayout/>} >
-       {/* <Route index element={<Home/>} /> */}
         <Route path='published' element={<Published/>} />
         <Route path='unpublished' element={<UnPublished/>} />
        </Route>
        <Route path='product' element={<Products/>} />
+       <Route path='/producta' element={<Productaa/>} />
        </Route>
     <Route path='/login' element={<Login/>} />
     <Route path="/signup" element={<Signup/>} />
     </Routes>
     </BrowserRouter>
+    <ToastContainer 
+    position="bottom-center"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored" />
     </>
   )
 }

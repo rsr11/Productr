@@ -46,9 +46,7 @@ export const AddProduct = async(req,res)=>{
 export const SendAllProduct = async(req,res)=>{
        try {
          const userId = req.user._id;
-
          const {status} = req.query;
-
          let theProduct;
 
          if(status){
@@ -71,20 +69,12 @@ export const SendProduct =  async (req,res)=>{
         let {productId} = req.params;
         productId = productId?.trim();
 
-        const userId = req.user._id;
-
         // let {status} = req.query;
         
         if(!productId) return res.status(400).json({msg:"didn't get the product id"});
         if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
 
-
-        // let theProduct = false;
-        // if(status){
-  
-        // }else{
-         const theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
-        // }
+        const theProduct = await productModel.findOne({_id: new mongoose.Types.ObjectId(productId)});
 
         if(!theProduct) return res.status(404).json({msg:"The Product is not available!"});
         res.status(200).json({msg:"Got the product", data: theProduct});
@@ -94,6 +84,8 @@ export const SendProduct =  async (req,res)=>{
         res.status(500).json({msg:"Server error", error: error.message});
       }
 };
+
+
 
 
 export const updateProductStatus = async (req,res)=>{
@@ -110,22 +102,19 @@ export const updateProductStatus = async (req,res)=>{
        if(!theProduct) return res.status(404).json({msg:"The Product is not available!"});
       
        
-
        if(theProduct.status === "publish"){
        const updatedProdut = await productModel.findByIdAndUpdate(new mongoose.Types.ObjectId(productId),{$set:{status:"unpublish"}},{new:true});
        
-      return res.status(200).json({data:updatedProdut,msg:"Status is changed"});
+       return res.status(200).json({data:updatedProdut,msg:"Status is changed"});
 
        }else{
        const updatedProdut = await productModel.findByIdAndUpdate(new mongoose.Types.ObjectId(productId),{$set:{status:"publish"}},{new:true});   
         return res.status(200).json({data:updatedProdut,msg:"Status is changed"});
-
        }
 
      } catch (error) {
         console.log(error);
-        return res.status(400).json({error:error,msg:"server error!"})
-        
+        return res.status(400).json({error:error,msg:"server error!"})     
      }
 }
 
@@ -145,19 +134,12 @@ export const editProduct = async(req,res)=>{
     let { productId } = req.params;
     productId = productId?.trim();
 
-    // console.log(productId);
-    
-
-    // if (!mongoose.Types.ObjectId.isValid(productId)) {
-    //   return res.status(400).json({ msg: "Invalid product ID" });
-    // }
-
     const theProduct = await productModel.findById(new mongoose.Types.ObjectId(productId));
     if (!theProduct) {
       return res.status(404).json({ msg: "Product not found" });
     }
 
-   const newImages = theProduct?.productImgs?.filter(item => !existingImg.includes(item));
+    const newImages = theProduct?.productImgs?.filter(item => !existingImg.includes(item));
     console.log(`new images =  ${newImages}`);
     
     
@@ -212,9 +194,6 @@ export const deleteProduct = async(req, res)=>{
         let {productId} = req.params;
         productId = productId?.trim();
 
-        // console.log(req);
-        
-
         if(!productId) return res.status(400).json({msg:"select a product to delete it"});
         // if(!mongoose.Types.ObjectId.isValid(productId)) return res.status(400).json({msg:"Invalid product ID format"});
 
@@ -234,8 +213,8 @@ export const deleteProduct = async(req, res)=>{
         const productDeleted = await productModel.deleteOne({_id:new mongoose.Types.ObjectId(productId)}); 
 
         if(productDeleted.deletedCount === 0) return res.status(404).json({msg:"Unable to delete the product!"});
-
         res.status(200).json({msg:"product deleted successfully!"});
+        
        } catch (error) {
           console.log(error);
           res.status(500).json({msg:"Server error", error: error.message});

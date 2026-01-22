@@ -1,8 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import demo1Img from "../assets/demo_product2.png";
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { DeleteProduct, updateStatus } from '../API/product.api';
 import ProductDetail from '../context/ProductContext/product';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+// import {notig} from "react-toastify";
 // import { Navigate } from 'react-router-dom';
 
 // const demoData=[{name:"Product type-",}]
@@ -11,15 +15,52 @@ const ProductCard = ({name, type, brandName, isReturnEligible, mrp, productImg, 
  
     const context = useContext(ProductDetail);
     const { setIsProductFormOpen, setIsEditingOn } = context;
+    const queryClient = useQueryClient();
+    const [currentImg, setCurrentImg] = useState({indx:0,link:productImg?.[0]});
+ 
+  
+    const deleteMutation = useMutation({
+             mutationFn: () => DeleteProduct(productId),
+             onMutate: async () => {   // 🔥 OPTIMISTIC UPDATE
+             // 1. Stop any ongoing refetch
+             await queryClient.cancelQueries(["products"]);
 
-    const deleteProduct =async ()=>{
-        const deleted = await DeleteProduct(productId);
-        if(deleted?.status === 200){
-        alert(deleted?.msg);
-        window.location.reload();
+            // 2. Backup current products
+            const previousProducts = queryClient.getQueryData(["products"]);
+
+            // 3. Remove product instantly from UI
+            queryClient.setQueryData(["products"], (old) =>
+            old?.filter((product) => product._id !== productId)
+            );
+
+            // 4. Return backup for rollback
+           return { previousProducts };
+           },
+
+            // ❌ If API fails → rollback
+           onError: (error, _, context) => {
+             queryClient.setQueryData(
+               ["products"],
+               context.previousProducts
+             );
+           },
+
+           // ✅ Always sync with backend
+           onSettled: () => {
+            toast.success("Deleted successfully")
+           queryClient.invalidateQueries(["products"]);
+           },
+           });
+
+
+    // const deleteProduct =async ()=>{
+    //     const deleted = await DeleteProduct(productId);
+    //     queryClient.invalidateQueries(["products"]);     
+    //     toast.success(deleted.msg,{position:"bottom-center",theme:"colored",transition:"Slide",autoClose:1000});
+    //      queryClient.invalidateQueries(["products"]);  
+    //         // toast("server error")
         
-        }
-    };
+    // };
 
     const EditCard = ()=>{
         setIsProductFormOpen(true);
@@ -31,24 +72,31 @@ const ProductCard = ({name, type, brandName, isReturnEligible, mrp, productImg, 
      
         const res= await updateStatus(productId);
         if(res.status === 200){
-            alert(res?.data);
-            window.location.reload();
+        toast.success("status changed!");
+        queryClient.invalidateQueries(["products"]);
+            
             // navigate(location.pathname,{replace:true});
         }
         
 
     }
-
-
-    
  
     return (
     <section  className='bg-white border-[#DCDFE3] rounded-2xl border'>
        <section className=' w-[90%] m-3 relative bg-[#F8F9FB] border-[#DCDFE3] rounded-lg border mx-auto' >
-         <img src={productImg?.[0] || demo1Img} className='size-32 mx-auto' alt="" />
+         <img src={currentImg.link || demo1Img} className='size-32 mx-auto' alt="" />
          <div className='absolute right-[50%] translate-x-[50%] bg-white border p-1 rounded-lg border-[#DCDFE3] -bottom-2 flex gap-1'>
-             <div className='size-2 rounded-full bg-orange-500' ></div>
-             <div className='size-2 rounded-full bg-[#DCDFE3]' ></div>
+             {
+                productImg?.map((data,index)=>{
+                    // console.log(data+" "+ index);
+                    // console.log(currentImg);
+                    
+                    return <button key={data} onClick={()=>{setCurrentImg({indx:index,link:data})}} className={`cursor-pointer size-2 rounded-full ${data === currentImg.link ? "bg-orange-500" : "bg-[#DCDFE3]"} `} ></button>
+                   
+                })
+             }
+              {/* <div className='size-2 rounded-full bg-orange-500' ></div>
+             <div className='size-2 rounded-full bg-[#DCDFE3]' ></div> */}
              {/* <div className='size-2 rounded-full bg-[#DCDFE3]' ></div> */}
          </div>
        </section>
@@ -90,7 +138,7 @@ const ProductCard = ({name, type, brandName, isReturnEligible, mrp, productImg, 
         <button type='button' onClick={updateProductStatus}  className={`py-1 w-[40%]  cursor-pointer  px-3 rounded-lg  ${status === "publish" ? "GreenGradientBtn" : "GradientBtn"} text-white`} >{status === "publish" ? "Unpublish" : "Publish"}</button>
         <button onClick={EditCard} className='py-1 w-[40%] cursor-pointer  px-3 rounded-lg border' >Edit</button>
         {/* </section> */}
-        <button type='button' onClick={deleteProduct} className='border w  cursor-pointer border-[#D4D4D4] px-2 rounded-lg' > <RiDeleteBin5Line size={20} className='mx-auto' color='#98A2B3' /> </button>
+        <button type='button' onClick={()=>deleteMutation.mutate()} className='border w  cursor-pointer border-[#D4D4D4] px-2 rounded-lg' > <RiDeleteBin5Line size={20} className='mx-auto' color='#98A2B3' /> </button>
        </section>
     </section>
     )}
