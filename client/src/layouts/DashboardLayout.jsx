@@ -8,9 +8,10 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { HiMenuAlt3 } from 'react-icons/hi'
 import { IoClose } from 'react-icons/io5'
 import { FaRegUserCircle } from 'react-icons/fa'
-import axios from 'axios'
+// import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useQueryClient } from '@tanstack/react-query'
+import api from '../API/axios.config'
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -21,7 +22,7 @@ const DashboardLayout = () => {
 
 
   const LogoutFunc = async ()=>{
-   const res = await axios.get(`http://localhost:4020/productr/api/auth/logout`,{withCredentials:true});
+   const res = await api.get(`/auth/logout`,{withCredentials:true});
    if(res.status === 200){
       toast.success("Logout Successfully!!");
       navigate("/login");

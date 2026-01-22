@@ -5,10 +5,11 @@ import "./imageUpload.css";
 import { CreateProduct,  UpdateProduct } from '../API/product.api';
 import ProductDetail from '../context/ProductContext/product';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+// import axios from 'axios';
 import Loader from './Loader';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import api from '../API/axios.config';
 
 const ProductForm = ({formType, BtnType, itemName}) => {
    
@@ -20,7 +21,7 @@ const navigate = useNavigate();
 
   const getData = async ()=>{
     try{
-    const res = await axios.get(`http://localhost:4020/productr/api/products/get-product/${isEditingOn.productId}`,{withCredentials:true});  
+    const res = await api.get(`/products/get-product/${isEditingOn.productId}`,{withCredentials:true});  
     return res.data?.data;
     }catch(err){
       console.log(err);
@@ -42,6 +43,9 @@ const navigate = useNavigate();
   const sellingPriceRef = useRef();
   const brandRef = useRef();
   const returnEligibilityRef = useRef();
+
+
+  if(isError) return <>Error in loading data</>
 
   // Update images when product data is loaded
   useEffect(() => {
@@ -384,7 +388,7 @@ return (
           <label className="mx-4 sm:mx-5 mb-1 font-medium text-[#344054]" htmlFor="productName">Product Name</label>
           <input 
             ref={nameRef} 
-            defaultValue={isEditingOn?.status ? productData?.name : ""} 
+            defaultValue={isEditingOn?.status || !productDataLoading ? productData?.name : ""} 
             className="mx-4 sm:mx-5 mb-3 border p-2 px-3 rounded-lg border-[#DCDFE3] focus:outline-none focus:ring-2 focus:ring-[#071074] focus:border-transparent transition-all" 
             type="text" 
             placeholder='Product Name'

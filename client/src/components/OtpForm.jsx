@@ -1,7 +1,9 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import UserDetail from '../context/UserContext/user';
+import api from '../API/axios.config';
+import Loader from './Loader';
 
 const OtpForm = ({purpose,name,contact}) => {
 
@@ -11,6 +13,7 @@ const OtpForm = ({purpose,name,contact}) => {
     const otpRef = useRef([]);
     const naviagte = useNavigate();
     const context = useContext(UserDetail);
+    const [loading,setLoading] = useState(false);
 
     const {setUser} = context;
 
@@ -85,7 +88,7 @@ const OtpForm = ({purpose,name,contact}) => {
          
       
         try {
-          const res = await axios.post("http://localhost:4020/productr/api/auth/checkOtp",{contact,purpose, otp:theval},{headers:{"Content-Type":"application/json"},withCredentials:true});
+          const res = await api.post("/auth/checkOtp",{contact,purpose, otp:theval},{headers:{"Content-Type":"application/json"},withCredentials:true});
 
           if(res.status === 200){
             alert(res?.data?.msg);
@@ -103,14 +106,15 @@ const OtpForm = ({purpose,name,contact}) => {
 
 
     const reSendotp = async(purpose,name,contact)=>{
-          
+          setLoading(true);
        try {
-
-        const res = await axios.post(`http://localhost:4020/productr/api/auth/${purpose}`,
+       
+        const res = await api.post(`/auth/${purpose}`,
            purpose === 'login' ? {contact} : {name,contact},
           {headers:{"Content-Type":"application/json"}} );
 
           if(res.status===200){
+            setLoading(false);
             alert("Otp is Resended successfully");
             setResendSec(20);
           }
@@ -125,6 +129,8 @@ const OtpForm = ({purpose,name,contact}) => {
   return (
     <section className='mt-10' > 
          
+         {loading ? <Loader/> : <>
+          
          <h1 className='text-[#344054]  text-lg' >Enter OTP</h1>
 
          
@@ -149,7 +155,7 @@ const OtpForm = ({purpose,name,contact}) => {
              <button type='submit' className='cursor-pointer text-white py-2 rounded-lg mt-5 bg-[#071074]' >Enter your OTP</button>
                </form>
              <p className='text-[#98A2B3] mt-3 ml-5 text-sm' > Didnt recive OTP ? <button onClick={()=>reSendotp(purpose,name,contact)} disabled={ResendSec > 0 ? true : false} className={`${ResendSec > 0 ? "cursor-not-allowed" : "cursor-pointer"} text-[#071074]`} > {ResendSec > 0 ? `Resend in ${ResendSec}s` : "Resend OTP" }  </button> </p>  
-
+         </> }
     </section>
   )
 }

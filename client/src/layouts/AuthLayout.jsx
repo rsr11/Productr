@@ -4,6 +4,8 @@ import { Navigate } from 'react-router-dom';
 import Loader from "../components/Loader.jsx"
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import api from '../API/axios.config.js';
+import { toast } from 'react-toastify';
 
 const AuthLayout = ({children}) => {
  
@@ -11,8 +13,10 @@ const AuthLayout = ({children}) => {
   // const {user,loading} = context;
 
   const fetchUser = async () => {
+     console.log("the the value of api is "+ api);
+     
       try {
-        const res = await axios.get("http://localhost:4020/productr/api/auth/activeUser", {withCredentials: true});
+        const res = await api.get(`/auth/activeUser`, {withCredentials: true});
         return res?.data?.data;
         // setUser(res?.data?.data || null);
       }catch (err) {
@@ -24,10 +28,13 @@ const AuthLayout = ({children}) => {
 
   const {data,isLoading, isError} = useQuery({queryKey:["UserData"], queryFn:fetchUser,refetchInterval: 300000,refetchOnWindowFocus:true});
 
-  console.log("data is "+ data?.status);
+  console.log("data is "+ data);
   
 
-   if(isError) return <section className='absolute w-screen h-screen' > Server Error Plz try later </section>
+   if(isError) {
+     toast.error("Server Error Plz try later");
+     return <Navigate to="/login" replace />;
+  }
 
    if (isLoading) return <section className='h-screen flex justify-center items-center' > <Loader/> </section>;
 

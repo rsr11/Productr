@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import EmptyCard from '../../components/EmptyCard'
-import axios from 'axios';
+// import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from '../../components/ProductCard';
 import ProductForm from '../../components/ProductForm';
 import ProductDetail from '../../context/ProductContext/product';
+import api from '../../API/axios.config';
 
 const Published = () => {
   
@@ -13,7 +14,7 @@ const Published = () => {
   
   const getData = async() => {
     try {
-      const res = await axios.get("http://localhost:4020/productr/api/products/all-product?status=publish", {withCredentials: true});
+      const res = await api.get("/products/all-product?status=publish", {withCredentials: true});
       return res.data?.data;
     } catch(err) {
       return err?.response?.msg;
@@ -90,7 +91,7 @@ export default Published
 //   const {isProductFormOpen} = context;   
 //   const getData = async()=>{
 //     try{
-//     const res = await axios.get("http://localhost:4020/productr/api/products/all-product?status=publish",{withCredentials:true});
+//     const res = await axios.get("/products/all-product?status=publish",{withCredentials:true});
 //     return res.data?.data;
 //     }catch(err){
 //       return err?.response?.msg;

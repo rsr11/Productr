@@ -4,9 +4,10 @@ import ProductForm from '../components/ProductForm';
 import { IoMdAdd } from 'react-icons/io';
 import ProductCard from '../components/ProductCard';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+// import axios from 'axios';
 import Loader from '../components/Loader';
 import ProductDetail from '../context/ProductContext/product';
+import api from '../API/axios.config';
 
 const Products = () => {
 
@@ -16,7 +17,7 @@ const Products = () => {
 
     const getProductData = async()=>{
         try {
-            const res = await axios.get(`http://localhost:4020/productr/api/products/all-product`,{withCredentials:true});
+            const res = await api.get(`/products/all-product`,{withCredentials:true});
             return res?.data?.data;
         } catch (error) {
             return error?.response?.msg;

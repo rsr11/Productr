@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
 import EmptyCard from '../../components/EmptyCard';
-import axios from 'axios';
+// import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from '../../components/ProductCard';
 import Loader from '../../components/Loader';
 import ProductDetail from '../../context/ProductContext/product';
 import ProductForm from '../../components/ProductForm';
+import api from '../../API/axios.config';
 
 const UnPublished = () => {
 
@@ -14,7 +15,7 @@ const UnPublished = () => {
 
   const getData = async() => {
     try {
-      const res = await axios.get("http://localhost:4020/productr/api/products/all-product?status=unpublish", {withCredentials: true});
+      const res = await api.get("/products/all-product?status=unpublish", {withCredentials: true});
       return res.data?.data;
     } catch(err) {
       return err?.response?.msg;
@@ -93,7 +94,7 @@ export default UnPublished
 
 //   const getData = async()=>{
 //     try{
-//     const res = await axios.get("http://localhost:4020/productr/api/products/all-product?status=unpublish",{withCredentials:true});
+//     const res = await axios.get("/products/all-product?status=unpublish",{withCredentials:true});
 //     return res.data?.data;
 //     }catch(err){
 //       return err?.response?.msg;

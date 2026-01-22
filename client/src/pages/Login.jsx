@@ -5,9 +5,10 @@ import Bg from "../assets/bg.png";
 import validator from "validator";
 import Logo from '../components/Logo';
 import OtpForm from '../components/OtpForm';
-import axios from 'axios';
+// import axios from 'axios';
 import Loader from '../components/Loader';
 import UserDetail from '../context/UserContext/user';
+import api from '../API/axios.config';
 
 const Login = () => {
 
@@ -53,7 +54,7 @@ const LoginSubmit = async (e)=>{
     
     setLoading(true);
 
-    const response = await axios.post(`http://localhost:4020/productr/api/auth/login`,{contact:contactRef.current.value},{headers:{ "Content-Type": "application/json" } });
+    const response = await api.post(`/auth/login`,{contact:contactRef.current.value},{headers:{ "Content-Type": "application/json" } });
    
     if(response.status === 200){
       setLoading(false);
