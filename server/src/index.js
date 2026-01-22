@@ -11,7 +11,6 @@ import { initCloudinary } from "./config/cloudnary.config.js";
 
 const app = express();
 
-console.log("ENV CHECK:", process.env.CLOUDINARY_API_KEY);
 
 // middlewares 
 app.use(express.urlencoded({extended:true}));

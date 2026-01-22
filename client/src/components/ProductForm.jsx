@@ -21,7 +21,7 @@ const navigate = useNavigate();
 
   const getData = async ()=>{
     try{
-    const res = await api.get(`/products/get-product/${isEditingOn.productId}`,{withCredentials:true});  
+    const res = await api.get(`/productr/api/products/get-product/${isEditingOn.productId}`,{withCredentials:true});  
     return res.data?.data;
     }catch(err){
       console.log(err);

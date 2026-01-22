@@ -1,6 +1,10 @@
 import axios from "axios"
 import nodemailer from "nodemailer";
+import twilio from "twilio";
 
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const client = twilio(accountSid,authToken);
 
 
 
@@ -23,6 +27,21 @@ export const sendSmsViaOtp = async (mobile,otp)=>{
         return;
     }
 };
+
+
+
+
+export const sendOtpWithSMS = async(mobile,otp)=>{
+
+    const message = await client.messages.create({
+        body:`The Otp is from Productr is ${otp}`,
+        from:"+919119222577",
+        to:`+91${mobile}`
+    });
+
+    console.log(message.body);
+    
+}
 
 
 export const sendOtpViaEmail = async (toEmail, otp) => {
