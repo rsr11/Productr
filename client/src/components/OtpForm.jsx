@@ -88,7 +88,7 @@ const OtpForm = ({purpose,name,contact}) => {
          
       
         try {
-          const res = await api.post("/auth/checkOtp",{contact,purpose, otp:theval},{headers:{"Content-Type":"application/json"},withCredentials:true});
+          const res = await api.post("/productr/api/auth/checkOtp",{contact,purpose, otp:theval},{headers:{"Content-Type":"application/json"},withCredentials:true});
 
           if(res.status === 200){
             alert(res?.data?.msg);
@@ -109,7 +109,7 @@ const OtpForm = ({purpose,name,contact}) => {
           setLoading(true);
        try {
        
-        const res = await api.post(`/auth/${purpose}`,
+        const res = await api.post(`/productr/api/auth/${purpose}`,
            purpose === 'login' ? {contact} : {name,contact},
           {headers:{"Content-Type":"application/json"}} );
 

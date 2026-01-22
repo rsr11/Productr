@@ -15,7 +15,7 @@ const UnPublished = () => {
 
   const getData = async() => {
     try {
-      const res = await api.get("/products/all-product?status=unpublish", {withCredentials: true});
+      const res = await api.get("/productr/api/products/all-product?status=unpublish", {withCredentials: true});
       return res.data?.data;
     } catch(err) {
       return err?.response?.msg;

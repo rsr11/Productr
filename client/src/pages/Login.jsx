@@ -54,7 +54,7 @@ const LoginSubmit = async (e)=>{
     
     setLoading(true);
 
-    const response = await api.post(`/auth/login`,{contact:contactRef.current.value},{headers:{ "Content-Type": "application/json" } });
+    const response = await api.post(`/productr/api/auth/login`,{contact:contactRef.current.value},{headers:{ "Content-Type": "application/json" } });
    
     if(response.status === 200){
       setLoading(false);

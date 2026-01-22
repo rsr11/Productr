@@ -22,7 +22,7 @@ const DashboardLayout = () => {
 
 
   const LogoutFunc = async ()=>{
-   const res = await api.get(`/auth/logout`,{withCredentials:true});
+   const res = await api.get(`/productr/api/auth/logout`,{withCredentials:true});
    if(res.status === 200){
       toast.success("Logout Successfully!!");
       navigate("/login");

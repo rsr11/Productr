@@ -14,7 +14,7 @@ const Published = () => {
   
   const getData = async() => {
     try {
-      const res = await api.get("/products/all-product?status=publish", {withCredentials: true});
+      const res = await api.get("/productr/api/products/all-product?status=publish", {withCredentials: true});
       return res.data?.data;
     } catch(err) {
       return err?.response?.msg;

@@ -3,7 +3,7 @@ import UserDetail from '../context/UserContext/user'
 import { Navigate } from 'react-router-dom';
 import Loader from "../components/Loader.jsx"
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+// import axios from 'axios';
 import api from '../API/axios.config.js';
 import { toast } from 'react-toastify';
 
@@ -16,7 +16,7 @@ const AuthLayout = ({children}) => {
      console.log("the the value of api is "+ api);
      
       try {
-        const res = await api.get(`/auth/activeUser`, {withCredentials: true});
+        const res = await api.get(`/productr/api/auth/activeUser`, {withCredentials: true});
         return res?.data?.data;
         // setUser(res?.data?.data || null);
       }catch (err) {

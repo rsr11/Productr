@@ -1,4 +1,5 @@
-import axios from "axios"
+// import axios from "axios"
+import api from "./axios.config";
 // import { useNavigate } from "react-router-dom";
 
 
@@ -24,7 +25,7 @@ export const CreateProduct = async(productData)=>{
     
     try {
       
-      const res = await axios.post(`http://localhost:4020/productr/api/products/add-product`, formData, {
+      const res = await api.post(`/productr/api/products/add-product`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           },
@@ -46,7 +47,7 @@ export const DeleteProduct = async(productId)=>{
   try {  
     console.log(productId);
       
-    const res = await axios.delete(`http://localhost:4020/productr/api/products/delete-product/${productId}`,{
+    const res = await api.delete(`/productr/api/products/delete-product/${productId}`,{
       withCredentials:true
     });
     
@@ -62,7 +63,7 @@ export const DeleteProduct = async(productId)=>{
 
 export const GetProductById = async(productId)=>{
      try {
-        const res = await axios.get(`http://localhost:4020/productr/api/products/${productId}`,{
+        const res = await api.get(`/productr/api/products/${productId}`,{
             withCredentials:true
           });
           
@@ -113,7 +114,7 @@ export const UpdateProduct = async(productData,productId)=>{
 
     
     try {
-      const res = await axios.put(`http://localhost:4020/productr/api/products/edit-product/${productId}`, formData, {
+      const res = await api.put(`/productr/api/products/edit-product/${productId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -135,7 +136,7 @@ export const UpdateProduct = async(productData,productId)=>{
     // const navigate = useNavigate();
     try {
     
-    const res = await axios.patch(`http://localhost:4020/productr/api/products/update-product-status/${productId}`,{},{withCredentials:true});
+    const res = await api.patch(`/productr/api/products/update-product-status/${productId}`,{},{withCredentials:true});
     
     if(res.status === 200) return {status: res.status, data: res?.data?.msg};
   

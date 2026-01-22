@@ -17,7 +17,7 @@ const Products = () => {
 
     const getProductData = async()=>{
         try {
-            const res = await api.get(`/products/all-product`,{withCredentials:true});
+            const res = await api.get(`/productr/api/products/all-product`,{withCredentials:true});
             return res?.data?.data;
         } catch (error) {
             return error?.response?.msg;

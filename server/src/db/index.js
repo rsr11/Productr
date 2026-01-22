@@ -4,7 +4,6 @@ import mongoose from "mongoose"
 
 export const connectDB = async () => {
     try {
-        console.log("eega");
         
         let connection = await mongoose.connect(process.env.MONGO_URI);
             console.log(`MongoDB connected in port ${connection.connection.port}`);
