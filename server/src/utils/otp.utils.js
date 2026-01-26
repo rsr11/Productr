@@ -91,7 +91,7 @@ export const sendOtpViaEmail = async (toEmail, otp) => {
 
   // console.log(info);
   
-  console.log('Message sent:', info.messageId);
+//   console.log('Message sent:', info.messageId);
   return true;
       
     } catch (error) {
