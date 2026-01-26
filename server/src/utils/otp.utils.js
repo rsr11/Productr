@@ -49,15 +49,18 @@ export const sendOtpViaEmail = async (toEmail, otp) => {
     // console.log(process.env.EMAIL_ID + "  " + process.env.EMAIL_PASSKEY);
     
     
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port:465,
-      secure:true,
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSKEY 
-      }
-    });
+   const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,  // use TLS
+  auth: {
+    user: process.env.EMAIL_ID,
+    pass: process.env.EMAIL_PASSKEY 
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
 
 
     try {
