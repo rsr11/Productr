@@ -109,10 +109,10 @@ const LoginSubmit = async (e)=>{
             }
           </section>
 
-          <section className='bg-white text-sm border mt-5 md:mt-0 mx-10 md:mx-0 border-[#D4D4D4] md:mb-20 py-2 md:py-5 md:px-14 rounded-lg' >
+          {/* <section className='bg-white text-sm border mt-5 md:mt-0 mx-10 md:mx-0 border-[#D4D4D4] md:mb-20 py-2 md:py-5 md:px-14 rounded-lg' >
             <p className='text-[#98A2B3] text-center font-normal' >Don’t have a Productr Account </p>
             <h4 className='text-[#071074] text-center  font-medium' >SignUp Here</h4>
-          </section>
+          </section> */}
 
         </section>
       {/* <Logo styling={"px-5 md:hidden pt-3 font-semibold text-lg"} /> */}

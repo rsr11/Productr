@@ -9,7 +9,6 @@ import Published from './pages/Home/Published.jsx'
 import UnPublished from './pages/Home/UnPublished.jsx'
 import Products from './pages/Products.jsx'
 import HomeLayout from './layouts/HomeLayout.jsx'
-import LoginRes from './pages/LoginRes.jsx'
 import Productaa from './pages/Productaa.jsx'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
