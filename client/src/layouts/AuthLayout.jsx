@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 
 const AuthLayout = ({children}) => {
  
+  console.log("authlayout loaded!");
+  
   // const context = useContext(UserDetail);
   // const {user,loading} = context;
 
@@ -28,7 +30,7 @@ const AuthLayout = ({children}) => {
 
   const {data,isLoading, isError} = useQuery({queryKey:["UserData"], queryFn:fetchUser,refetchInterval: 300000,refetchOnWindowFocus:true});
 
-  console.log("data is "+ data);
+  // console.log("data is "+ data);
   
 
    if(isError) {

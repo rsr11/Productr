@@ -1,10 +1,15 @@
 import axios from "axios"
 import nodemailer from "nodemailer";
 import twilio from "twilio";
+import { Resend } from 'resend';
 
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const client = twilio(accountSid,authToken);
+
+console.log(process.env.RESEND_API);
+
+const resend = new Resend("re_7CpnM3Ba_NqgqhKtfcEgmjyBiqL3LjP3N");
 
 
 
@@ -49,33 +54,40 @@ export const sendOtpViaEmail = async (toEmail, otp) => {
     // console.log(process.env.EMAIL_ID + "  " + process.env.EMAIL_PASSKEY);
     
     
-   const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,  // use TLS
-  auth: {
-    user: process.env.EMAIL_ID,
-    pass: process.env.EMAIL_PASSKEY 
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+//    const transporter = nodemailer.createTransport({
+//   host: 'smtp.gmail.com',
+//   port: 587,
+//   secure: false,  // use TLS
+//   auth: {
+//     user: process.env.EMAIL_ID,
+//     pass: process.env.EMAIL_PASSKEY 
+//   },
+//   tls: {
+//     rejectUnauthorized: false
+//   }
+// });
 
 
     try {
 
-        const info = await transporter.sendMail({
-    from: '"Productr" <rsr45411@gmail.com>',
-    to: toEmail,
-    subject: 'Your OTP Code',
-    html: `
-    <div>
-    <h1>The Otp is valid for 5 min ! </h1>
-    <p>Your OTP is : <strong>${otp}</strong></p>
-    <div>
-    `
-  });
+        resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: toEmail,
+        subject: 'Hello World',
+        html: `<p>Your OTP is : <strong>${otp}</strong></p>`
+          });
+
+//         const info = await transporter.sendMail({
+//     from: '"Productr" <rsr45411@gmail.com>',
+//     to: toEmail,
+//     subject: 'Your OTP Code',
+//     html: `
+//     <div>
+//     <h1>The Otp is valid for 5 min ! </h1>
+//     <p>Your OTP is : <strong>${otp}</strong></p>
+//     <div>
+//     `
+//   });
 
   // console.log(info);
   
