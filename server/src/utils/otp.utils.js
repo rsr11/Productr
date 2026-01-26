@@ -67,16 +67,6 @@ export const sendOtpViaEmail = async (toEmail, otp) => {
 //   }
 // });
 
-
-    try {
-
-        resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: toEmail,
-        subject: 'Hello World',
-        html: `<p>Your OTP is : <strong>${otp}</strong></p>`
-          });
-
 //         const info = await transporter.sendMail({
 //     from: '"Productr" <rsr45411@gmail.com>',
 //     to: toEmail,
@@ -92,12 +82,19 @@ export const sendOtpViaEmail = async (toEmail, otp) => {
   // console.log(info);
   
 //   console.log('Message sent:', info.messageId);
-  return true;
-      
-    } catch (error) {
-        console.log("error in otp sending "+error);
-        return false;
-     
-    }
+try {
+    const data = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Use this for testing
+      to: toEmail,
+      subject: 'Your OTP Code',
+      html: `<p>Your OTP is: <strong>${otp}</strong></p>`
+    });
+    
+    console.log('Email sent:', data);
+    return { success: true };
+  } catch (error) {
+    console.error('Email error:', error);
+    return { success: false, error: error.message };
+  }
   
 };
