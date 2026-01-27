@@ -1,6 +1,6 @@
 # Productr
 
-### It is a Assignment given by Orufy Technology.
+### It is a Project with Orufy Technology.
 ### I have created two folders:
   - server (Backend logic)
   - client (Frontend logic)
