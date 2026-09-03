@@ -23,7 +23,7 @@ const contactRef = useRef();
 
 const validateLoginInput = (value) => {
   if (!value ) {
-    return "Email or mobile number is required";
+    return "Phone number is required";
   }
 
    if (validator.isMobilePhone(value, "en-IN")) return null;
@@ -101,8 +101,8 @@ const LoginSubmit = async (e)=>{
             { isOtpSended ?  <OtpForm purpose="login" contact={contact} /> : isLoading ? <Loader/> :
             <form action="" onSubmit={(e)=>{LoginSubmit(e)}} className='mt-5 mx-10 md:mx-0 md:mt-10' >
                 <section className='flex flex-col' >
-                <label htmlFor="contact">Email or Phone number</label>
-                <input type="text" className='border bg-white mt-2 p-2 rounded-lg border-[#D4D4D4]' ref={contactRef} name="contact" placeholder='Enter email or phone number' id="contact" />
+                <label htmlFor="contact">Phone number</label>
+                <input type="text" className='border bg-white mt-2 p-2 rounded-lg border-[#D4D4D4]' ref={contactRef} name="contact" placeholder='Enter phone number' id="contact" />
                 <button type='submit' className='bg-[#071074] cursor-pointer text-white py-2 rounded-lg mt-2 md:mt-5' >Login</button>
                 </section>
             </form>
